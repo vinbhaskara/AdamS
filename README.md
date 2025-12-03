@@ -6,20 +6,20 @@ Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint``_`` arXiv:1905.1320
 
 ### Algorithm 
 
-We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved Test scores across multiple datasets and architectures. Particularly, our optimizer shines when the data is highly noisy or redundant or low-rank. Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
+We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines when the data is highly noisy or redundant or low-rank. Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
 
->> NOTE: **We highly recommend using the unbiased *AdamS* Optimizer over the other variants presented in the paper.**
+> NOTE: **We highly recommend using the unbiased [*AdamS*](PyTorch-Optimizers/AdamS.py) optimizer over the other variants presented in the paper.**
 
 ### Code
 
-PyTorch implementation of the introduced optimizers is available under [``PyTorch-Optimizers/``](PyTorch-Optimizers/).
+PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``PyTorch-Optimizers/``](PyTorch-Optimizers/).
 
 The **AdamS** optimizer for PyTorch is available [here](PyTorch-Optimizers/AdamS.py). 
 
 ### Usage
 
-The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer except the `optimizer.step()` function that takes a lambda function as an argument:
+The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer except that the `optimizer.step()` function takes a required parameter that is a lambda function as follows:
 
 ```python
 # compute output and loss
@@ -37,7 +37,7 @@ Voila!
 
 ### Experiments
 
-We evaluate the optimizers on multiple models such as Logistic Regression (LR), MLPs, and CNNs on the CIFAR-10/MNIST datasets. The architecture of the networks is chosen to closely resemble the experiments published in the original Adam paper [(Kingma and Ba, 2015)](https://arxiv.org/abs/1412.6980). Code for our experiments is available under [``Experiments/``](Experiments/), and is based on the original CIFAR-10 classifier code [here](https://github.com/bearpaw/pytorch-classification).
+We evaluated the optimizers on multiple models such as Logistic Regression (LR), MLPs, and CNNs on the CIFAR-10/MNIST datasets. The architecture of the networks is chosen to closely resemble the experiments published in the original Adam paper [(Kingma and Ba, 2015)](https://arxiv.org/abs/1412.6980). Code for our experiments is available under [``Experiments/``](Experiments/), and is based on the original CIFAR-10 classifier code [here](https://github.com/bearpaw/pytorch-classification).
 
 #### Reproducing the results
 
