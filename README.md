@@ -9,7 +9,7 @@ Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint``_`` arXiv:1905.1320
 We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines when the data is highly noisy or redundant or low-rank. Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
 
-> NOTE: **We highly recommend using the unbiased [*AdamS*](PyTorch-Optimizers/AdamS.py) optimizer over the other variants presented in the paper.**
+> NOTE: **We highly recommend using the [*AdamS*](PyTorch-Optimizers/AdamS.py) optimizer, which is an unbiased estimate of the gradients and outperforms the other variants introduced in the paper, based on our experiments.**
 
 ### Code
 
