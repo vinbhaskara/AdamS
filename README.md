@@ -6,21 +6,34 @@ Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint``_`` arXiv:1905.1320
 
 ### Algorithm 
 
-We introduce variants of the Adam optimizer that either bias the updates along regions that conform across mini-batches or randomly "explore" in the parameter space along the variance-gradient. The update rules are summarized below: 
+We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved Test scores across multiple datasets and architectures. Particularly, our optimizer shines when the data is highly noisy or redundant or low-rank. Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
-![Summary of update rules](updates.png)  
 
-AdamUCB and AdamCB are biased estimates of the full-gradient. We recommend using AdamS which is an unbiased estimate, and outperforms other variants based on our experiments with CIFAR-10. Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
+>> NOTE: **We highly recommend using the unbiased *AdamS* Optimizer over the other variants presented in the paper.**
 
 ### Code
 
-PyTorch implementation of the optimizers is available under [``PyTorch-Optimizers/``](PyTorch-Optimizers/)
+PyTorch implementation of the introduced optimizers is available under [``PyTorch-Optimizers/``](PyTorch-Optimizers/).
+
+The **AdamS** optimizer for PyTorch is available [here](PyTorch-Optimizers/AdamS.py). 
 
 ### Usage
 
-Each of our optimizer requires access to the current loss value. This is acheived by passing in a ``closure`` function  to the ``optimizer.step()`` method. The function ``closure()`` should be defined to return the current loss tensor after the forward pass.
+The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer except the `optimizer.step()` function that takes a lambda function as an argument:
 
-Refer to lines ``351-357`` in [``Experiments/main.py``](Experiments/main.py) for an example of the usage.
+```python
+# compute output and loss
+outputs = model(inputs)
+loss = criterion(outputs, targets)
+
+# optimizer
+optimizer.zero_grad()
+loss.backward()
+optimizer.step(lambda: loss)  # pass a lambda function that returns the loss tensor
+```
+
+Voila!
+
 
 ### Experiments
 
@@ -48,9 +61,18 @@ Results of our training runs with the mean and the standard deviation values for
 
 ![Comparing dropout](Experiments/results_mean_std/images/dropout.jpg)
 
+### Update Rules
+
+The update rules for various variants of Adam in the paper are summarized below: 
+
+![Summary of update rules](updates.png)  
+
+AdamUCB and AdamCB are biased estimates of the full-gradient. We recommend using AdamS which is an unbiased estimate, and outperforms other variants based on our experiments with CIFAR-10. 
 
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
 
+
 ### Contribute
+
 Feel free to create a pull request if you find any bugs or you want to contribute (e.g., more datasets, more network structures, or tensorflow/keras ports). 
