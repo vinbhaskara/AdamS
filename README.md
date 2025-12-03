@@ -2,7 +2,7 @@
 
 Paper: [http://arxiv.org/abs/1905.13200](http://arxiv.org/abs/1905.13200)
 
-Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint``_`` arXiv:1905.13200 [cs.LG] (2019)``.
+Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint,``_`` arXiv:1905.13200 [cs.LG] (2019)``.
 
 ### Algorithm 
 
