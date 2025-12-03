@@ -4,7 +4,7 @@ import numpy as np
 from torch.optim.optimizer import Optimizer
 
 
-class Adams(Optimizer):
+class AdamS(Optimizer):
     r"""Implements AdamS algorithm. Unbiased estimate of gradient that implements
     a stochastic regularizer using the variance-gradient direction.
 
@@ -12,8 +12,8 @@ class Adams(Optimizer):
         params (iterable): iterable of parameters to optimize or dicts defining
             parameter groups
         lr (float, optional): learning rate (default: 1e-3)
-        eta: The variance of the zero-mean Gaussian which is sampled to determine 
-        the component of variance-gradient in the parameter update
+        eta: The stddev of the zero-mean Gaussian which is sampled to determine 
+        the signed weight of variance-gradient in the parameter update
         betas (Tuple[float, float], optional): coefficients used for computing
             running averages of gradient and its square (default: (0.9, 0.999))
         eps (float, optional): term added to the denominator to improve
@@ -49,10 +49,10 @@ class Adams(Optimizer):
             np.random.seed(seed)
         defaults = dict(lr=lr, etas=etas, betas=betas, eps=eps,
                         weight_decay=weight_decay, amsgrad=amsgrad, bound_stddev=bound_stddev, randomize_eta2=randomize_eta2)
-        super(Adams, self).__init__(params, defaults)
+        super(AdamS, self).__init__(params, defaults)
 
     def __setstate__(self, state):
-        super(Adams, self).__setstate__(state)
+        super(AdamS, self).__setstate__(state)
         for group in self.param_groups:
             group.setdefault('amsgrad', False)
 
@@ -156,5 +156,5 @@ class Adams(Optimizer):
         return loss
 
 # aliases
-AdamS = Adams
-adams = Adams
+Adams = AdamS
+adams = AdamS
