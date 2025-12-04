@@ -11,19 +11,24 @@ We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
 
-> NOTE: **We highly recommend using the [*AdamS*](PyTorch-Optimizers/AdamS.py) optimizer, which is an unbiased estimate of the gradients and outperforms the other variants introduced in the paper, based on our experiments.**
+> NOTE: **We recommend using the [*AdamS*](optimizers/adams.py) optimizer with unbiased gradients, which outperforms the other variants introduced in the paper based on our experiments.**
 
 ### Code
 
-PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``PyTorch-Optimizers/``](PyTorch-Optimizers/).
+PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``optimizers/``](optimizers/).
 
-The **AdamS** optimizer for PyTorch is available [here](PyTorch-Optimizers/AdamS.py). 
+The **AdamS** optimizer for PyTorch is available [here](optimizers/AdamS.py). 
 
 ### Usage
 
 The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer except that the `optimizer.step()` function takes a required parameter that is a lambda function as follows:
 
 ```python
+from optimizers.adams import AdamS
+optimizer = AdamS(model.parameters(), lr=1e-3, eta=0.0001)
+
+# training loop
+...
 # compute output and loss
 outputs = model(inputs)
 loss = criterion(outputs, targets)
@@ -32,6 +37,7 @@ loss = criterion(outputs, targets)
 optimizer.zero_grad()
 loss.backward()
 optimizer.step(lambda: loss)  # pass a lambda function that returns the loss tensor
+...
 ```
 
 Voila!
