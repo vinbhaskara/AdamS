@@ -45,40 +45,44 @@ Voila!
 
 ### Experiments
 
-We evaluated the optimizers on multiple models such as Logistic Regression (LR), MLPs, and CNNs on the CIFAR-10/MNIST datasets. The architecture of the networks is chosen to closely resemble the experiments published in the original Adam paper [(Kingma and Ba, 2015)](https://arxiv.org/abs/1412.6980). Code for our experiments is available under [``Experiments/``](Experiments/), and is based on the original CIFAR-10 classifier code [here](https://github.com/bearpaw/pytorch-classification).
+We evaluated the optimizers on multiple models such as Logistic Regression (LR), MLPs, and CNNs on the CIFAR-10/MNIST datasets. The architecture of the networks is chosen to closely resemble the experiments published in the original Adam paper [(Kingma and Ba, 2015)](https://arxiv.org/abs/1412.6980). Code for our experiments is available under [``experiments/``](experiments/), and is based on the original CIFAR-10 classifier code [here](https://github.com/bearpaw/pytorch-classification).
 
 #### Reproducing the results
 
-* Run the shell script for each type of model (LR/MLP/CNN) under [``Experiments/``](Experiments/)
+* Run the shell script for each type of model (LR/MLP/CNN) under [``experiments/``](experiments/)
 * Compute the Mean and the Standard Deviation of the training/validation metrics for each configuration across the three runs. 
 
-Results of our training runs with the mean and the standard deviation values for each configuration is provided under [``Experiments/results_mean_std/``](Experiments/results_mean_std).
+Results of our training runs with the mean and the standard deviation values for each configuration is provided under [``experiments/results_mean_std/``](experiments/results_mean_std).
 
 ### Results
 
 #### CNN trained on CIFAR-10 with batch size = 128 and no dropout
 
-![CNN with Batch Size 128](Experiments/results_mean_std/images/cifar-10.jpg)
+![CNN with Batch Size 128](experiments/results_mean_std/images/cifar-10.jpg)
 
 #### CNN trained on CIFAR-10 with batch size = 16 and no dropout
 
-![CNN with Batch Size 16](Experiments/results_mean_std/images/cifar-10-bsz16.jpg)
+![CNN with Batch Size 16](experiments/results_mean_std/images/cifar-10-bsz16.jpg)
 
 
 #### Comparison of Dropout with AdamS for CNN trained on CIFAR-10 with batch size = 128 
 
-![Comparing dropout](Experiments/results_mean_std/images/dropout.jpg)
+![Comparing dropout](experiments/results_mean_std/images/dropout.jpg)
 
 ### Update Rules
 
 The update rules for various variants of Adam in the paper are summarized below: 
 
-![Summary of update rules](updates.png)  
+![Summary of update rules](images/updates.png)  
 
 AdamUCB and AdamCB are biased estimates of the full-gradient. We recommend using AdamS which is an unbiased estimate, and outperforms other variants based on our experiments with CIFAR-10. 
 
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
+We recommend using AdamS optimizer over the other variants presented based on our experiments. The detailed algorithm for AdamS is as follows --
+
+#### AdamS Optimization Algorithm
+![AdamS Algorithm](images/algorithm_adams.png)
 
 
 ### Contribute
