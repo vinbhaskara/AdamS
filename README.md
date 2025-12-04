@@ -84,7 +84,7 @@ AdamUCB and AdamCB are biased estimates of the full-gradient. We recommend using
 
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
-We recommend using AdamS optimizer over the other variants presented based on our experiments. The detailed algorithm for AdamS is as follows --
+We recommend using the AdamS optimizer over the other variants presented. The detailed algorithm for AdamS is given below.
 
 #### AdamS Optimization Algorithm
 ![AdamS Algorithm](images/algorithm_adams.png)
