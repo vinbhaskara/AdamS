@@ -6,7 +6,7 @@ Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint,``_`` arXiv:1905.132
 
 ### Algorithm 
 
-We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines when the data is highly noisy or redundant or low-rank. 
+We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines in low-data regime and when the data is highly noisy, redundant, or missing. 
 
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
@@ -21,10 +21,15 @@ The **AdamS** optimizer for PyTorch is available [here](optimizers/AdamS.py).
 
 ### Usage
 
-The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer except that the `optimizer.step()` function takes a required parameter that is a lambda function as follows:
+The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer, except that `optimizer.step()` requires a function returning the loss tensor, and an additional exploration parameter `eta` must be specified. This parameter controls the standard deviation of the noise injected into the gradients along highly uncertain directions of the loss landscape. Higher value of `eta` is preferred for more noisy datasets.
+
+Example:
 
 ```python
 from optimizers.adams import AdamS
+
+# eta specifies the exploration parameter
+# use a higher eta for more noisy datasets
 optimizer = AdamS(model.parameters(), lr=1e-3, eta=0.0001)
 
 # training loop
