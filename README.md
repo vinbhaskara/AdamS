@@ -19,6 +19,8 @@ PyTorch implementations of the Adam optimizer variants introduced in the paper a
 
 The **AdamS** optimizer for PyTorch is available [here](optimizers/AdamS.py). 
 
+Tested on `Python <= 3.12.3` and `PyTorch <= 2.7.0`.
+
 ### Usage
 
 The usage is identical to the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer, except that `optimizer.step()` requires a function returning the loss tensor, and an additional exploration parameter `eta` must be specified. This parameter controls the standard deviation of the noise injected into the gradients along highly uncertain directions of the loss landscape. Higher value of `eta` is preferred for more noisy datasets.
