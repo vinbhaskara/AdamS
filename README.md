@@ -28,9 +28,13 @@ Example:
 ```python
 from optimizers.adams import AdamS
 
-# eta specifies the exploration parameter
-# use a higher eta for more noisy datasets
-optimizer = AdamS(model.parameters(), lr=1e-3, eta=0.0001)
+# eta specifies the exploration noise parameter (use a higher eta for more noisy/sparse datasets)
+# set `decoupled_weight_decay` to True for AdamW-style weight decay
+optimizer = AdamS(model.parameters(), 
+                  lr=1e-3, 
+                  eta=0.0001, 
+                  weight_decay=0,
+                  decoupled_weight_decay=False)
 
 # training loop
 ...

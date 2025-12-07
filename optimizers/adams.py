@@ -7,6 +7,8 @@ from torch.optim.optimizer import Optimizer
 class AdamS(Optimizer):
     r"""Implements AdamS algorithm. Unbiased estimate of gradient that implements
     a stochastic regularizer using the variance-gradient direction.
+    Based on the paper: https://arxiv.org/abs/1905.13200.
+    Includes AdamW-style weight decay when `decoupled_weight_decay=True`.
 
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining
@@ -19,6 +21,9 @@ class AdamS(Optimizer):
         eps (float, optional): term added to the denominator to improve
             numerical stability (default: 1e-8)
         weight_decay (float, optional): weight decay (L2 penalty) (default: 0)
+        decoupled_weight_decay (boolean, optional): if True, implements the AdamW 
+            style of weight decay (see: https://arxiv.org/abs/1711.05101), else uses L2 penalty.
+            Suggested weight_decay value when this is True is `weight_decay=0.01`.
         amsgrad (boolean, optional): whether to use the AMSGrad variant of this
             algorithm from the paper `On the Convergence of Adam and Beyond`_
             (default: False)
@@ -26,7 +31,7 @@ class AdamS(Optimizer):
     """
 
     def __init__(self, params, lr=1e-3, eta=0.0001, betas=(0.9, 0.999), eps=1e-8,
-                 weight_decay=0, amsgrad=False, seed=None):
+                 weight_decay=0, decoupled_weight_decay=False, amsgrad=False, seed=None):
         
         etas = (1.0, eta)
         randomize_eta2 = True 
@@ -48,7 +53,7 @@ class AdamS(Optimizer):
         if seed is not None:
             np.random.seed(seed)
         defaults = dict(lr=lr, etas=etas, betas=betas, eps=eps,
-                        weight_decay=weight_decay, amsgrad=amsgrad, bound_stddev=bound_stddev, randomize_eta2=randomize_eta2)
+                        weight_decay=weight_decay, decoupled_weight_decay=decoupled_weight_decay, amsgrad=amsgrad, bound_stddev=bound_stddev, randomize_eta2=randomize_eta2)
         super(AdamS, self).__init__(params, defaults)
 
     def __setstate__(self, state):
@@ -109,7 +114,13 @@ class AdamS(Optimizer):
                 state['step'] += 1
 
                 if group['weight_decay'] != 0:
-                    grad.add_(group['weight_decay'], p.data)
+                    if not group['decoupled_weight_decay']:
+                        grad.add_(group['weight_decay'], p.data)
+                    else:
+                        # the LR is multiplied with weight_decay to follow the latest pytorch's
+                        # implementation of AdamW (unlike what's proposed in the paper that excludes the LR)
+                        # Ref: https://github.com/pytorch/pytorch/blob/e92f1243b478a05dc9e4dc3e2024981b5d0cdf6a/torch/optim/adam.py#L419
+                        p.data.mul_(1.0 - (group['lr'] * group['weight_decay']))
 
                 # Compute the UCB weight term based on current loss and existing averages so far r_loss, s_loss
                 bias_correction1_previous = 1 - beta1 ** (state['step'] - 1)
