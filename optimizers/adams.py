@@ -6,9 +6,9 @@ from torch.optim.optimizer import Optimizer
 
 class AdamS(Optimizer):
     r"""Implements AdamS algorithm. Unbiased estimate of gradient that implements
-    a stochastic regularizer using the variance-gradient direction.
-    Based on the paper: https://arxiv.org/abs/1905.13200.
-    Includes AdamW-style weight decay when `decoupled_weight_decay=True`.
+    a stochastic regularizer using the variance-gradient direction. Includes 
+    AdamW-style weight decay when `decoupled_weight_decay=True`.
+    Based on the paper: https://arxiv.org/abs/1905.13200 (Bhaskara and Desai, 2019).
 
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining
