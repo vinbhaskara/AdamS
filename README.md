@@ -1,4 +1,4 @@
-## Exploiting Uncertainty of Loss Landscape for Stochastic Optimization: AdamS Optimizer
+## Exploiting Uncertainty of Loss Landscape for Stochastic Optimization: AdamS Optimizer for PyTorch
 
 Paper: [http://arxiv.org/abs/1905.13200](http://arxiv.org/abs/1905.13200)
 
