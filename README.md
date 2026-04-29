@@ -13,6 +13,15 @@ Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
 > NOTE: **We recommend using the [*AdamS*](optimizers/adams.py) optimizer with unbiased gradients, which outperforms the other variants introduced in the paper based on our experiments.**
 
+### Why the variance of the loss and not the variance of the gradient?
+
+A natural alternative is to use the variance of the gradient across mini-batches as the uncertainty signal, since optimization happens in gradient space. We choose the variance of the loss for two reasons.
+
+First, the two quantities measure different things. Consider parameters at a point where the per mini-batch loss surfaces agree on the value of the loss but are locally jagged, at small length scales in parameter space, in different directions across mini-batches. The mini-batch gradients can then disagree strongly even though the mini-batch loss values are close: gradient variance is high, loss variance is small. As an uncertainty signal for whether the mini-batches agree on the loss landscape at the current point, the variance of the loss is the macro-level quantity, whereas the variance of the gradient is more sensitive to local jaggedness that does not necessarily reflect meaningful disagreement in loss values. The same argument can run the other way: when loss values disagree but gradients happen to align, gradient variance can underreport disagreement that is visible in the loss values.
+
+Second, the natural concern that loss variance depends on the scale of the loss is largely absorbed by Adam-style normalization. The update uses the loss only through a centered-and-normalized quantity: current loss minus running mean loss, divided by running loss standard deviation. This quantity is invariant to multiplicative rescaling of the loss, and Adam's RMSprop-like denominator further cancels the remaining global scaling of the gradient. The resulting updates are therefore approximately invariant to the scale of the loss.
+
+
 ### Code
 
 PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``optimizers/``](optimizers/).
