@@ -1,34 +1,9 @@
-## Exploiting Uncertainty of Loss Landscape for Stochastic Optimization: AdamS Optimizer for PyTorch
+## Official implementation of the *AdamS* Optimizer for PyTorch
 
-Paper: [http://arxiv.org/abs/1905.13200](http://arxiv.org/abs/1905.13200)
+From the paper: *[Exploiting Uncertainty of Loss Landscape for Stochastic Optimization](http://arxiv.org/abs/1905.13200)*  
 
-Cite as: ``V.S. Bhaskara, and S. Desai. ``_``arXiv preprint,``_`` arXiv:1905.13200 [cs.LG] (2019)``.
-
-### Algorithm 
-
-We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines in low-data regime and when the data is noisy, sparse/redundant, or missing. 
-
-Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
-
-
-> NOTE: **We recommend using the [*AdamS*](optimizers/adams.py) optimizer with unbiased gradients, which outperforms the other variants introduced in the paper based on our experiments.**
-
-### Why the variance of the loss and not the variance of the gradient?
-
-A natural alternative is to use the variance of the gradient across mini-batches as the uncertainty signal, since optimization happens in gradient space. We choose the variance of the loss for two reasons.
-
-First, the two quantities measure different things. Consider parameters at a point where the per mini-batch loss surfaces agree on the value of the loss but are locally jagged, at small length scales in parameter space, in different directions across mini-batches. The mini-batch gradients can then disagree strongly even though the mini-batch loss values are close: gradient variance is high, loss variance is small. As an uncertainty signal for whether the mini-batches agree on the loss landscape at the current point, the variance of the loss is the macro-level quantity, whereas the variance of the gradient is more sensitive to local jaggedness that does not necessarily reflect meaningful disagreement in loss values. The same argument can run the other way: when loss values disagree but gradients happen to align, gradient variance can underreport disagreement that is visible in the loss values.
-
-Second, the natural concern that loss variance depends on the scale of the loss is largely absorbed by Adam-style normalization. The update uses the loss only through a centered-and-normalized quantity: current loss minus running mean loss, divided by running loss standard deviation. This quantity is invariant to multiplicative rescaling of the loss, and Adam's RMSprop-like denominator further cancels the remaining global scaling of the gradient. The resulting updates are therefore approximately invariant to the scale of the loss.
-
-
-### Code
-
-PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``optimizers/``](optimizers/).
-
-The **AdamS** optimizer for PyTorch is available [here](optimizers/AdamS.py). 
-
-Tested on `Python <= 3.12.3` and `PyTorch <= 2.7.0`.
+Cite as: 
+> *V.S. Bhaskara, and S. Desai. arXiv preprint, arXiv:1905.13200 [cs.LG] (2019).*
 
 ### Usage
 
@@ -60,8 +35,14 @@ optimizer.step(lambda: loss)  # pass a lambda function that returns the loss ten
 ...
 ```
 
-Voila!
 
+### Code
+
+PyTorch implementations of the Adam optimizer variants introduced in the paper are available under [``optimizers/``](optimizers/).
+
+The **AdamS** optimizer for PyTorch is available [here](optimizers/AdamS.py). 
+
+Tested on `Python <= 3.12.3` and `PyTorch <= 2.7.0`.
 
 ### Experiments
 
@@ -89,6 +70,32 @@ Results of our training runs with the mean and the standard deviation values for
 
 ![Comparing dropout](experiments/results_mean_std/images/dropout.jpg)
 
+
+### Algorithm 
+
+We introduce variants of the [Adam](https://docs.pytorch.org/docs/2.8/generated/torch.optim.Adam.html) optimizer that either bias the updates along regions that conform across mini-batches or randomly *explore* unbiased in the parameter space along the variance-gradient. Our variants of the optimizer are shown to generalize better with improved test accuracy across multiple datasets and architectures. Particularly, our optimizer shines in low-data regime and when the data is noisy, sparse/redundant, or missing. 
+
+Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
+
+#### The AdamS Optimization Algorithm
+![AdamS Algorithm](images/algorithm_adams.png)
+
+
+We recommend using the [*AdamS*](optimizers/adams.py) optimizer with unbiased gradients, which outperforms the other variants introduced in the paper based on our experiments.
+
+### Why the variance of the loss and not the variance of the gradient?
+
+A natural alternative is to use the variance of the gradient across mini-batches as the uncertainty signal, since optimization happens in gradient space. We choose the variance of the loss for two reasons.
+
+First, the two quantities measure different things. Consider parameters at a point where the per mini-batch loss surfaces agree on the value of the loss but are locally jagged, at small length scales in parameter space, in different directions across mini-batches. The mini-batch gradients can then disagree strongly even though the mini-batch loss values are close: gradient variance is high, loss variance is small. As an uncertainty signal for whether the mini-batches agree on the loss landscape at the current point, the variance of the loss is the macro-level quantity, whereas the variance of the gradient is more sensitive to local jaggedness that does not necessarily reflect meaningful disagreement in loss values. The same argument can run the other way: when loss values disagree but gradients happen to align, gradient variance can underreport disagreement that is visible in the loss values.
+
+Second, the natural concern that loss variance depends on the scale of the loss is largely absorbed by Adam-style normalization. The update uses the loss only through a centered-and-normalized quantity: current loss minus running mean loss, divided by running loss standard deviation. This quantity is invariant to multiplicative rescaling of the loss, and Adam's RMSprop-like denominator further cancels the remaining global scaling of the gradient. The resulting updates are therefore approximately invariant to the scale of the loss.
+
+
+
+
+
+
 ### Update Rules
 
 The update rules for various variants of Adam in the paper are summarized below: 
@@ -99,10 +106,7 @@ AdamUCB and AdamCB are biased estimates of the full-gradient. We recommend using
 
 Please refer to the [paper](http://arxiv.org/abs/1905.13200) for more details.
 
-We recommend using the AdamS optimizer over the other variants presented. The detailed algorithm for AdamS is given below.
 
-#### AdamS Optimization Algorithm
-![AdamS Algorithm](images/algorithm_adams.png)
 
 
 ### Contribute
